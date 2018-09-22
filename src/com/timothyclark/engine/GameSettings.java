@@ -20,13 +20,6 @@ public final class GameSettings
 		this.targetTPS = targetTPS;
 		this.renderMode = renderMode;
 	}
-	
-
-	public enum RenderingMode
-	{
-		SOFTWARE, HARDWARE
-	}
-
 
 	public RenderingMode getRenderMode()
 	{

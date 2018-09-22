@@ -5,6 +5,6 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Engine.start(new MyGame());
+		Engine.getEngineInstance().start(new MyGame());
 	}
 }

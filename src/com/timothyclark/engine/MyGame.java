@@ -1,4 +1,5 @@
 package com.timothyclark.engine;
+
 import com.timothyclark.engine.core.Game;
 
 public class MyGame extends Game
@@ -20,6 +21,11 @@ public class MyGame extends Game
 
 	@Override
 	public void initGame()
+	{
+	}
+
+	@Override
+	public void cleanupGame()
 	{
 	}
 }

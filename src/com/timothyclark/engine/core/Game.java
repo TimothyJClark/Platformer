@@ -16,4 +16,6 @@ public abstract class Game
 	public abstract void renderGame();
 	
 	public abstract void initGame();
+	
+	public abstract void cleanupGame();
 }
