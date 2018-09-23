@@ -17,6 +17,7 @@ public class MyGame extends Game
 	@Override
 	public void renderGame()
 	{
+		this.getRenderingEngine().drawRect(50, 50, 150, 50, 0xff0000);
 	}
 
 	@Override

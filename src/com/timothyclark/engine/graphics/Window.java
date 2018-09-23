@@ -3,10 +3,15 @@ package com.timothyclark.engine.graphics;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JFrame;
 
@@ -25,6 +30,8 @@ public final class Window
 	private int width, height;
 	private Dimension size;
 	private RenderingMode renderMode;
+	
+	private int scale = 1;
 
 	public Window(int width, int height, RenderingMode renderMode)
 	{
@@ -41,7 +48,7 @@ public final class Window
 		canvas.setMaximumSize(size);
 		canvas.setPreferredSize(size);
 
-		buffImg = new BufferedImage((int) size.getWidth(), (int) size.getHeight(), BufferedImage.TYPE_INT_RGB);
+		buffImg = new BufferedImage((int) (size.getWidth() / scale), (int) (size.getHeight() / scale), BufferedImage.TYPE_INT_RGB);
 
 		g = canvas.getGraphics();
 
@@ -49,6 +56,7 @@ public final class Window
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
 		frame.addWindowListener(new WindowListener()
 		{
 			public void windowActivated(WindowEvent arg0)
@@ -83,9 +91,42 @@ public final class Window
 
 		pixelBuffer = ((DataBufferInt) buffImg.getRaster().getDataBuffer()).getData();
 
+		frame.addComponentListener(new ComponentListener()
+		{
+			public void componentHidden(ComponentEvent arg0)
+			{
+			}
+
+			public void componentMoved(ComponentEvent arg0)
+			{
+			}
+
+			public void componentResized(ComponentEvent arg0)
+			{
+				size = frame.getSize();
+				
+				canvas.setMinimumSize(size);
+				canvas.setMaximumSize(size);
+				canvas.setPreferredSize(size);
+				
+				buffImg = new BufferedImage((int) (size.getWidth() / scale), (int) (size.getHeight() / scale), BufferedImage.TYPE_INT_RGB);
+				
+				pixelBuffer = ((DataBufferInt) buffImg.getRaster().getDataBuffer()).getData();
+				
+				System.out.println("buffImg size " + buffImg.getWidth() + " " + buffImg.getHeight());
+				System.out.println("frame size " + frame.getWidth() + " " + frame.getHeight());
+				System.out.println("canvas size " + canvas.getWidth() + " " + canvas.getHeight());
+			}
+
+			public void componentShown(ComponentEvent arg0)
+			{
+			}
+		});
+
+		frame.setTitle(Engine.ENGINE_NAME + " ver " + Engine.VERSION);
 		frame.setVisible(true);
 	}
-	
+
 	public void close()
 	{
 		frame.dispose();
@@ -101,7 +142,6 @@ public final class Window
 				return;
 			}
 
-			System.out.println("draw");
 			for (int i : pixelBuffer)
 			{
 				i = 0x00;
@@ -112,5 +152,12 @@ public final class Window
 		{
 
 		}
+	}
+	
+	public void setPixelColor(int x, int y, int color)
+	{
+		if (x < 0 || x > (size.getWidth() / scale) || y < 0 || y > (size.getHeight() / scale)) return;
+		
+		pixelBuffer[x + (int) (y * size.getWidth() / scale)] = color;
 	}
 }
