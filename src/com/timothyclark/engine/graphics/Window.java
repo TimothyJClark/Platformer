@@ -31,7 +31,7 @@ public final class Window
 	private Dimension size;
 	private RenderingMode renderMode;
 	
-	private int scale = 1;
+	private int scale = 2;
 
 	public Window(int width, int height, RenderingMode renderMode)
 	{
@@ -109,9 +109,9 @@ public final class Window
 				canvas.setMaximumSize(size);
 				canvas.setPreferredSize(size);
 				
-				buffImg = new BufferedImage((int) (size.getWidth() / scale), (int) (size.getHeight() / scale), BufferedImage.TYPE_INT_RGB);
+				//buffImg = new BufferedImage((int) (size.getWidth() / scale), (int) (size.getHeight() / scale), BufferedImage.TYPE_INT_RGB);
 				
-				pixelBuffer = ((DataBufferInt) buffImg.getRaster().getDataBuffer()).getData();
+				//pixelBuffer = ((DataBufferInt) buffImg.getRaster().getDataBuffer()).getData();
 				
 				System.out.println("buffImg size " + buffImg.getWidth() + " " + buffImg.getHeight());
 				System.out.println("frame size " + frame.getWidth() + " " + frame.getHeight());
@@ -142,11 +142,6 @@ public final class Window
 				return;
 			}
 
-			for (int i : pixelBuffer)
-			{
-				i = 0x00;
-			}
-
 			g.drawImage(buffImg, 0, 0, (int) size.getWidth(), (int) size.getHeight(), null);
 		} else if (this.renderMode == RenderingMode.HARDWARE)
 		{
@@ -154,10 +149,18 @@ public final class Window
 		}
 	}
 	
+	public void clearScreen()
+	{
+		for (int i = 0; i < pixelBuffer.length; i++)
+		{
+			pixelBuffer[i] = 0x00;
+		}
+	}
+	
 	public void setPixelColor(int x, int y, int color)
 	{
-		if (x < 0 || x > (size.getWidth() / scale) || y < 0 || y > (size.getHeight() / scale)) return;
+		if (x < 0 || x >= (buffImg.getWidth()) || y < 0 || y >= (buffImg.getHeight())) return;
 		
-		pixelBuffer[x + (int) (y * size.getWidth() / scale)] = color;
+		pixelBuffer[x + (int) (y * buffImg.getWidth())] = color;
 	}
 }
