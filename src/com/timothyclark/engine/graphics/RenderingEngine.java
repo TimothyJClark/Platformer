@@ -4,15 +4,16 @@ import java.util.Date;
 
 import com.timothyclark.engine.Engine;
 import com.timothyclark.engine.core.Game;
+import com.timothyclark.engine.level.entities.Entity;
 
 public class RenderingEngine
 {
 	private final Window theWindow;
 	private final Game gameInstance;
 	private final Thread renderingThread;
-	
-	private int frames, fps;
-	
+
+	private int frames, fps, workingFrameTime, averageFrameTime;
+
 	private final Object lock = new Object();
 
 	public RenderingEngine(Game gInstance)
@@ -24,29 +25,11 @@ public class RenderingEngine
 		{
 			public void run()
 			{
-				Thread.currentThread().setName("Rendering Thread");
-				
-				long lastSecond = System.currentTimeMillis();
-				
-				while (Engine.getEngineInstance().getEngineRunning())
-				{
-					if (System.currentTimeMillis() - lastSecond >= 1000)
-					{
-						lastSecond = System.currentTimeMillis();
-						
-						synchronized (lock)
-						{
-							fps = frames;
-						}
-						
-						frames = 0;
-					}
-					
-					render();
-					frames++;
-				}
+				renderingLoop();
 			}
 		});
+		
+		SpriteLoader.loadSpritesFromPath(SpriteLoader.DEFAULT_PATH);
 	}
 
 	public void start()
@@ -61,29 +44,91 @@ public class RenderingEngine
 		System.out.println("Rendering engine stopped at..." + new Date().toString());
 	}
 
+	private void renderingLoop()
+	{
+		Thread.currentThread().setName("Rendering Thread");
+
+		long lastSecond = System.currentTimeMillis();
+		long lastFrame = System.nanoTime();
+		long delta = 0;
+
+		while (Engine.getEngineInstance().getEngineRunning())
+		{
+			if ((System.nanoTime() - lastFrame) + delta >= (1000000000 / this.gameInstance.settings.getTargetFPS()))
+			{
+				delta = ((System.nanoTime() - lastFrame) + delta) - (1000000000 / this.gameInstance.settings.getTargetFPS());
+				this.workingFrameTime += System.nanoTime() - lastFrame;
+				lastFrame = System.nanoTime();
+				this.render();
+				this.frames++;
+			} else
+			{
+				try
+				{
+					Thread.sleep(0, 100);
+				} catch (InterruptedException e)
+				{
+				}
+			}
+
+			if (System.currentTimeMillis() - lastSecond >= 1000)
+			{
+				lastSecond = System.currentTimeMillis();
+
+				synchronized (lock)
+				{
+					this.fps = this.frames;
+					this.averageFrameTime = this.workingFrameTime / this.fps;
+				}
+
+				this.frames = 0;
+				this.workingFrameTime = 0;
+			}
+		}
+	}
+
 	private void render()
 	{
 		this.theWindow.clearScreen();
 		
-		gameInstance.renderGame();
-		
-		for (int i = 0; i < 5000; i++)
+		for(Entity e : this.gameInstance.getCurrentLevel().getEntities().values())
 		{
-			drawRect(i, i, 50, 150, 0xcc00ff);
+			Object o = (Sprite) e.getProperty("sprite");
+			
+			if (o instanceof Sprite)
+			{
+				Sprite sprite = (Sprite)o;
+				
+				this.drawSprite(e.getX(), e.getY(), sprite);
+			}
 		}
-		
+
+		gameInstance.renderGame();
+
 		this.theWindow.drawFrame();
 	}
-	
+
 	public int getFramesPerSecond()
 	{
 		int result;
-		
+
 		synchronized (lock)
 		{
 			result = this.fps;
 		}
-		
+
+		return result;
+	}
+
+	public int getAverageFrameTime()
+	{
+		int result;
+
+		synchronized (lock)
+		{
+			result = this.averageFrameTime;
+		}
+
 		return result;
 	}
 
@@ -99,6 +144,21 @@ public class RenderingEngine
 			for (int yy = y; yy < y + height; yy++)
 			{
 				this.theWindow.setPixelColor(xx, yy, color);
+			}
+		}
+	}
+
+	public void drawSprite(int x, int y, Sprite sprite)
+	{
+		for (int xx = 0; xx < sprite.getWidth(); xx++)
+		{
+			for (int yy = 0; yy < sprite.getHeight(); yy++)
+			{
+				int color = sprite.getImageBuffer()[xx + (yy * sprite.getWidth())];
+
+				if (color == 0xFFFF00DC) continue;
+
+				this.theWindow.setPixelColor(xx + x, yy + y, color);
 			}
 		}
 	}

@@ -1,4 +1,6 @@
-package com.timothyclark.engine;
+package com.timothyclark.engine.core;
+
+import com.timothyclark.engine.graphics.RenderingMode;
 
 public final class GameSettings
 {
@@ -9,7 +11,7 @@ public final class GameSettings
 	
 	public GameSettings()
 	{
-		this(800, 600, 60, 60, RenderingMode.SOFTWARE);
+		this(1600, 900, 999999999, 60, RenderingMode.SOFTWARE);
 	}
 
 	public GameSettings(int width, int height, int targetFPS, int targetTPS, RenderingMode renderMode)

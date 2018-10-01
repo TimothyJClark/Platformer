@@ -1,36 +1,33 @@
 package com.timothyclark.engine.graphics;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JFrame;
 
 import com.timothyclark.engine.Engine;
-import com.timothyclark.engine.RenderingMode;
 
 public final class Window
 {
 	private final JFrame frame;
 	private final Canvas canvas;
 	private BufferedImage buffImg;
-	private int[] pixelBuffer;
+	private volatile int[] pixelBuffer;
 
 	private Graphics g;
 
 	private int width, height;
 	private Dimension size;
 	private RenderingMode renderMode;
-	
+
 	private int scale = 2;
 
 	public Window(int width, int height, RenderingMode renderMode)
@@ -47,8 +44,10 @@ public final class Window
 		canvas.setMinimumSize(size);
 		canvas.setMaximumSize(size);
 		canvas.setPreferredSize(size);
+		
+		canvas.setBackground(Color.BLACK);
 
-		buffImg = new BufferedImage((int) (size.getWidth() / scale), (int) (size.getHeight() / scale), BufferedImage.TYPE_INT_RGB);
+		buffImg = new BufferedImage((int) (size.getWidth() / scale), (int) (size.getHeight() / scale), BufferedImage.TYPE_INT_ARGB);
 
 		g = canvas.getGraphics();
 
@@ -104,18 +103,10 @@ public final class Window
 			public void componentResized(ComponentEvent arg0)
 			{
 				size = frame.getSize();
-				
+
 				canvas.setMinimumSize(size);
 				canvas.setMaximumSize(size);
 				canvas.setPreferredSize(size);
-				
-				//buffImg = new BufferedImage((int) (size.getWidth() / scale), (int) (size.getHeight() / scale), BufferedImage.TYPE_INT_RGB);
-				
-				//pixelBuffer = ((DataBufferInt) buffImg.getRaster().getDataBuffer()).getData();
-				
-				System.out.println("buffImg size " + buffImg.getWidth() + " " + buffImg.getHeight());
-				System.out.println("frame size " + frame.getWidth() + " " + frame.getHeight());
-				System.out.println("canvas size " + canvas.getWidth() + " " + canvas.getHeight());
 			}
 
 			public void componentShown(ComponentEvent arg0)
@@ -148,19 +139,20 @@ public final class Window
 
 		}
 	}
-	
+
 	public void clearScreen()
 	{
-		for (int i = 0; i < pixelBuffer.length; i++)
+		for(int i = 0; i < this.pixelBuffer.length; i++)
 		{
-			pixelBuffer[i] = 0x00;
+			this.pixelBuffer[i] = 0xFF000000;
 		}
 	}
-	
+
 	public void setPixelColor(int x, int y, int color)
 	{
-		if (x < 0 || x >= (buffImg.getWidth()) || y < 0 || y >= (buffImg.getHeight())) return;
-		
+		if (x < 0 || x >= (buffImg.getWidth()) || y < 0 || y >= (buffImg.getHeight()))
+			return;
+
 		pixelBuffer[x + (int) (y * buffImg.getWidth())] = color;
 	}
 }

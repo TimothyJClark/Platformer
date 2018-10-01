@@ -1,4 +1,4 @@
-package com.timothyclark.engine;
+package com.timothyclark.engine.graphics;
 
 public enum RenderingMode
 {
