@@ -4,6 +4,7 @@ import com.timothyclark.engine.core.Game;
 import com.timothyclark.engine.core.LogicEngine;
 import com.timothyclark.engine.graphics.RenderingEngine;
 import com.timothyclark.engine.graphics.Window;
+import com.timothyclark.engine.input.KeyboardInput;
 
 public final class Engine
 {
@@ -15,6 +16,8 @@ public final class Engine
 
 	private LogicEngine logicEngine;
 	private RenderingEngine renderingEngine;
+	
+	private KeyboardInput keyboard;
 
 	private final Object runningLock = new Object();
 
@@ -32,8 +35,6 @@ public final class Engine
 	public void start(Game gameInstance)
 	{
 		this.theGameInstance = gameInstance;
-		this.logicEngine = new LogicEngine(this.theGameInstance);
-		this.renderingEngine = new RenderingEngine(this.theGameInstance);
 		this.init();
 	}
 
@@ -44,6 +45,12 @@ public final class Engine
 
 	private void init()
 	{
+		this.logicEngine = new LogicEngine(this.theGameInstance);
+		this.renderingEngine = new RenderingEngine(this.theGameInstance);
+		this.keyboard = new KeyboardInput();
+		
+		this.renderingEngine.getWindowInstance().registerKeyboardInput(this.keyboard);
+		
 		setEngineRunning(true);
 
 		this.theGameInstance.initGame();
@@ -85,5 +92,15 @@ public final class Engine
 	public RenderingEngine getRenderingEngine()
 	{
 		return this.renderingEngine;
+	}
+	
+	public synchronized KeyboardInput getKeyboard()
+	{
+		return this.keyboard;
+	}
+	
+	public Game getGameInstance()
+	{
+		return this.theGameInstance;
 	}
 }

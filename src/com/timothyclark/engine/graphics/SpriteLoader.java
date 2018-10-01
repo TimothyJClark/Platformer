@@ -43,8 +43,6 @@ public final class SpriteLoader
 					System.out.println("SpriteLoader: loaded sprite '" + name + "'");
 				}
 			}
-			
-			
 		} catch (Exception e)
 		{
 			e.printStackTrace();

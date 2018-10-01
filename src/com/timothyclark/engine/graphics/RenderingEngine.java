@@ -31,6 +31,11 @@ public class RenderingEngine
 		
 		SpriteLoader.loadSpritesFromPath(SpriteLoader.DEFAULT_PATH);
 	}
+	
+	public Window getWindowInstance()
+	{
+		return this.theWindow;
+	}
 
 	public void start()
 	{
@@ -99,7 +104,7 @@ public class RenderingEngine
 			{
 				Sprite sprite = (Sprite)o;
 				
-				this.drawSprite(e.getX(), e.getY(), sprite);
+				this.drawSprite((int) Math.floor(e.getX()), (int) Math.floor(e.getY()), sprite);
 			}
 		}
 

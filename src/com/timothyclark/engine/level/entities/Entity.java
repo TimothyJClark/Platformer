@@ -10,7 +10,8 @@ public abstract class Entity implements Serializable
 {
 	private static final long serialVersionUID = -139153158918741250L;
 
-	private int x, y, width, height;
+	private double x, y;
+	private int width, height;
 
 	private final Level lvl;
 
@@ -38,23 +39,68 @@ public abstract class Entity implements Serializable
 	}
 	
 	public abstract void entityUpdate();
-
-	public int getX()
+	
+	public abstract void onLeftHit(Entity hitter);
+	public abstract void onRightHit(Entity hitter);
+	public abstract void onTopHit(Entity hitter);
+	public abstract void onBottomHit(Entity hitter);
+	
+	public void move(int direction, double movement)
+	{
+		if (direction == 0)
+		{
+//			for(Entity other : this.lvl.getEntities().values())
+//			{
+//				
+//			}
+			
+			this.setX(this.getX() - movement);
+		}
+		else if (direction == 1)
+		{
+//			for(Entity other : this.lvl.getEntities().values())
+//			{
+//				
+//			}
+			
+			this.setX(this.getX() + movement);
+		}
+		else if (direction == 2)
+		{
+//			for(Entity other : this.lvl.getEntities().values())
+//			{
+//				
+//			}
+			
+			this.setY(this.getY() - movement);
+		}
+		else if (direction == 3)
+		{
+//			for(Entity other : this.lvl.getEntities().values())
+//			{
+//				
+//			}
+			
+			this.setY(this.getY() + movement);
+		}
+	}
+	
+	public double getX()
 	{
 		return x;
 	}
 
-	public void setX(int x)
+	public void setX(double x)
 	{
 		this.x = x;
 	}
 
-	public int getY()
+	public double getY()
 	{
 		return y;
 	}
 
-	public void setY(int y)
+	public void setY(double y)
 	{
 		this.y = y;
 	}

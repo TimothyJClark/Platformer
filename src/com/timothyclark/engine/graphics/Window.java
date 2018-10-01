@@ -14,6 +14,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import com.timothyclark.engine.Engine;
+import com.timothyclark.engine.input.KeyboardInput;
 
 public final class Window
 {
@@ -116,6 +117,11 @@ public final class Window
 
 		frame.setTitle(Engine.ENGINE_NAME + " ver " + Engine.VERSION);
 		frame.setVisible(true);
+	}
+	
+	public void registerKeyboardInput(KeyboardInput input)
+	{
+		this.canvas.addKeyListener(input);
 	}
 
 	public void close()
