@@ -4,14 +4,19 @@ import java.awt.event.KeyEvent;
 
 import com.timothyclark.engine.Engine;
 import com.timothyclark.engine.graphics.Sprite;
+import com.timothyclark.engine.graphics.SpriteLoader;
 import com.timothyclark.engine.level.Level;
 import com.timothyclark.engine.level.entities.Entity;
 
 public class PlayerEntity extends Entity
 {
-	public PlayerEntity(Level lvl, Sprite s)
+	private static final long serialVersionUID = -2244295326578245672L;
+
+	public PlayerEntity(Level lvl)
 	{
-		super(lvl, s);
+		super(lvl);
+		
+		this.setProperty("sprite", SpriteLoader.getSprite("guy"));
 	}
 
 	@Override
@@ -19,22 +24,26 @@ public class PlayerEntity extends Entity
 	{
 		if (Engine.getEngineInstance().getKeyboard().isKeyDown(KeyEvent.VK_A))
 		{
-			this.move(0, 8);
+			this.move(0, 2);
+			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraRight(2);
 		}
 		
 		if (Engine.getEngineInstance().getKeyboard().isKeyDown(KeyEvent.VK_D))
 		{
-			this.move(1, 8);
+			this.move(1, 2);
+			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraLeft(2);
 		}
 		
 		if (Engine.getEngineInstance().getKeyboard().isKeyDown(KeyEvent.VK_W))
 		{
-			this.move(2, 4);
+			this.move(2, 2);
+			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraDown(2);
 		}
 		
 		if (Engine.getEngineInstance().getKeyboard().isKeyDown(KeyEvent.VK_S))
 		{
-			this.move(3, 8);
+			this.move(3, 2);
+			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraUp(2);
 		}
 	}
 

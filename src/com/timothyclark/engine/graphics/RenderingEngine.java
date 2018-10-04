@@ -11,6 +11,8 @@ public class RenderingEngine
 	private final Window theWindow;
 	private final Game gameInstance;
 	private final Thread renderingThread;
+	
+	private Camera cam;
 
 	private int frames, fps, workingFrameTime, averageFrameTime;
 
@@ -20,6 +22,8 @@ public class RenderingEngine
 	{
 		this.gameInstance = gInstance;
 		this.theWindow = new Window(this.gameInstance.settings.getWidth(), this.gameInstance.settings.getHeight(), this.gameInstance.settings.getRenderMode());
+		
+		this.cam = new Camera(this.theWindow, 0, 0);
 
 		this.renderingThread = new Thread(new Runnable()
 		{
@@ -35,6 +39,11 @@ public class RenderingEngine
 	public Window getWindowInstance()
 	{
 		return this.theWindow;
+	}
+	
+	public Camera getCamera()
+	{
+		return this.cam;
 	}
 
 	public void start()
@@ -139,7 +148,7 @@ public class RenderingEngine
 
 	public void setPixelColor(int x, int y, int color)
 	{
-		this.theWindow.setPixelColor(x, y, color);
+		this.theWindow.setPixelColor(x + (int) this.cam.getOffsetX(), y + (int) this.cam.getOffsetY(), color);
 	}
 
 	public void drawRect(int x, int y, int width, int height, int color)
@@ -148,7 +157,7 @@ public class RenderingEngine
 		{
 			for (int yy = y; yy < y + height; yy++)
 			{
-				this.theWindow.setPixelColor(xx, yy, color);
+				this.setPixelColor(xx, yy, color);
 			}
 		}
 	}
@@ -163,7 +172,7 @@ public class RenderingEngine
 
 				if (color == 0xFFFF00DC) continue;
 
-				this.theWindow.setPixelColor(xx + x, yy + y, color);
+				this.setPixelColor(xx + x, yy + y, color);
 			}
 		}
 	}

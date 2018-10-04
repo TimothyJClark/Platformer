@@ -25,7 +25,6 @@ public final class Window
 
 	private Graphics g;
 
-	private int width, height;
 	private Dimension size;
 	private RenderingMode renderMode;
 
@@ -33,11 +32,9 @@ public final class Window
 
 	public Window(int width, int height, RenderingMode renderMode)
 	{
-		this.width = width;
-		this.height = height;
 		this.renderMode = renderMode;
 
-		this.size = new Dimension(this.width, this.height);
+		this.size = new Dimension(width, height);
 
 		frame = new JFrame();
 		canvas = new Canvas();
@@ -117,6 +114,16 @@ public final class Window
 
 		frame.setTitle(Engine.ENGINE_NAME + " ver " + Engine.VERSION);
 		frame.setVisible(true);
+	}
+	
+	public int getWidth()
+	{
+		return (int) this.size.getWidth() / scale;
+	}
+	
+	public int getHeight()
+	{
+		return (int) this.size.getHeight() / scale;
 	}
 	
 	public void registerKeyboardInput(KeyboardInput input)

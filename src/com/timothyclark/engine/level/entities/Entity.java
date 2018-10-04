@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import com.timothyclark.engine.graphics.Sprite;
+import com.timothyclark.engine.graphics.SpriteLoader;
 import com.timothyclark.engine.level.Level;
 
 public abstract class Entity implements Serializable
@@ -17,10 +18,10 @@ public abstract class Entity implements Serializable
 
 	private final HashMap<String, Object> properties = new HashMap<String, Object>();
 
-	public Entity(Level lvl, Sprite s)
+	public Entity(Level lvl)
 	{
 		this.lvl = lvl;
-		this.setProperty("sprite", s);
+		this.setProperty("sprite", SpriteLoader.getSprite("null"));
 		this.calculateWidthHeight();
 	}
 	
@@ -35,6 +36,11 @@ public abstract class Entity implements Serializable
 	
 	public void setProperty(String key, Object value)
 	{
+		if (this.properties.containsKey(key))
+		{
+			this.properties.remove(key);
+		}
+		
 		this.properties.put(key, value);
 	}
 	

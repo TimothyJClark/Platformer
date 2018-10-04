@@ -1,8 +1,8 @@
-package com.timothyclark.engine;
+package com.timothyclark.engine.demo;
 
+import com.timothyclark.engine.Engine;
 import com.timothyclark.engine.core.Game;
 import com.timothyclark.engine.core.GameSettings;
-import com.timothyclark.engine.demo.PlayerEntity;
 import com.timothyclark.engine.graphics.RenderingMode;
 import com.timothyclark.engine.graphics.SpriteLoader;
 import com.timothyclark.engine.level.Level;
@@ -27,11 +27,15 @@ public class MyGame extends Game
 	@Override
 	public void initGame()
 	{
+		Engine.getEngineInstance().getRenderingEngine().getCamera().setMaxVarianceX(100);
+		Engine.getEngineInstance().getRenderingEngine().getCamera().setMaxVarianceY(50);
 		Level cur = new Level();
 
 		this.setCurrentLevel(cur);
 		
-		cur.addEntity(7777777, new PlayerEntity(cur, SpriteLoader.getSprite("guy")));
+		cur.addEntity(7777777, new PlayerEntity(cur));
+		
+		cur.addEntity(4, new TileEntity(cur));
 
 	}
 
