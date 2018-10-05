@@ -7,6 +7,7 @@ import com.timothyclark.engine.graphics.Sprite;
 import com.timothyclark.engine.graphics.SpriteLoader;
 import com.timothyclark.engine.level.Level;
 import com.timothyclark.engine.level.entities.Entity;
+import com.timothyclark.engine.level.entities.MovementDirection;
 
 public class PlayerEntity extends Entity
 {
@@ -14,9 +15,7 @@ public class PlayerEntity extends Entity
 
 	public PlayerEntity(Level lvl)
 	{
-		super(lvl);
-		
-		this.setProperty("sprite", SpriteLoader.getSprite("guy"));
+		super(lvl, SpriteLoader.getSprite("guy"));
 	}
 
 	@Override
@@ -24,26 +23,22 @@ public class PlayerEntity extends Entity
 	{
 		if (Engine.getEngineInstance().getKeyboard().isKeyDown(KeyEvent.VK_A))
 		{
-			this.move(0, 2);
-			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraRight(2);
+			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraRight(this.move(MovementDirection.LEFT, 1));
 		}
 		
 		if (Engine.getEngineInstance().getKeyboard().isKeyDown(KeyEvent.VK_D))
 		{
-			this.move(1, 2);
-			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraLeft(2);
+			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraLeft(this.move(MovementDirection.RIGHT, 1));
 		}
 		
 		if (Engine.getEngineInstance().getKeyboard().isKeyDown(KeyEvent.VK_W))
 		{
-			this.move(2, 2);
-			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraDown(2);
+			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraDown(this.move(MovementDirection.UP, 1));
 		}
 		
 		if (Engine.getEngineInstance().getKeyboard().isKeyDown(KeyEvent.VK_S))
 		{
-			this.move(3, 2);
-			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraUp(2);
+			Engine.getEngineInstance().getRenderingEngine().getCamera().moveCameraUp(this.move(MovementDirection.DOWN, 1));
 		}
 	}
 

@@ -107,7 +107,7 @@ public class RenderingEngine
 		
 		for(Entity e : this.gameInstance.getCurrentLevel().getEntities().values())
 		{
-			Object o = (Sprite) e.getProperty("sprite");
+			Object o = e.getProperty("sprite");
 			
 			if (o instanceof Sprite)
 			{

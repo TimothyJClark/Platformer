@@ -10,8 +10,8 @@ public class TileEntity extends Entity
 
 	public TileEntity(Level lvl)
 	{
-		super(lvl);
-		this.setProperty("sprite", SpriteLoader.getSprite("test"));
+		super(lvl, SpriteLoader.getSprite("test"));
+		this.setProperty("solid", true);
 	}
 
 	@Override

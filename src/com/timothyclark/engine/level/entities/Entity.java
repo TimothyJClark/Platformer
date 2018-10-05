@@ -11,17 +11,17 @@ public abstract class Entity implements Serializable
 {
 	private static final long serialVersionUID = -139153158918741250L;
 
-	private double x, y;
+	private double x = 4, y = 4;
 	private int width, height;
 
 	private final Level lvl;
 
 	private final HashMap<String, Object> properties = new HashMap<String, Object>();
 
-	public Entity(Level lvl)
+	public Entity(Level lvl, Sprite s)
 	{
 		this.lvl = lvl;
-		this.setProperty("sprite", SpriteLoader.getSprite("null"));
+		this.setProperty("sprite", s);
 		this.calculateWidthHeight();
 	}
 	
@@ -51,44 +51,88 @@ public abstract class Entity implements Serializable
 	public abstract void onTopHit(Entity hitter);
 	public abstract void onBottomHit(Entity hitter);
 	
-	public void move(int direction, double movement)
+	public double move(MovementDirection direction, double movement)
 	{
-		if (direction == 0)
-		{
-//			for(Entity other : this.lvl.getEntities().values())
-//			{
-//				
-//			}
+		double result = movement;
+		
+		if (direction == MovementDirection.LEFT)
+		{			
+			for(Entity other : this.lvl.getEntities().values())
+			{
+				if (other == this) continue;
+				
+				if (this.x >= other.x + (other.width / 2) && this.x <= other.x + other.width && this.y + this.height > other.y && this.y < other.y + other.height)
+				{
+					other.onRightHit(this);
+					
+					if (other.getProperty("solid") == Boolean.TRUE)
+					{
+						result = this.x - (other.x + other.width);
+					}
+				}
+			}
 			
-			this.setX(this.getX() - movement);
+			this.setX(this.getX() - result);
 		}
-		else if (direction == 1)
+		else if (direction == MovementDirection.RIGHT)
 		{
-//			for(Entity other : this.lvl.getEntities().values())
-//			{
-//				
-//			}
+			for(Entity other : this.lvl.getEntities().values())
+			{
+				if (other == this) continue;
+				
+				if (this.x + this.width >= other.x && this.x + this.width <= other.x + (other.width / 2) && this.y + this.height > other.y && this.y < other.y + other.height)
+				{
+					other.onLeftHit(this);
+					
+					if (other.getProperty("solid") == Boolean.TRUE)
+					{
+						result = other.x - (this.x + this.width);
+					}
+				}
+			}
 			
-			this.setX(this.getX() + movement);
+			this.setX(this.getX() + result);
 		}
-		else if (direction == 2)
+		else if (direction == MovementDirection.UP)
 		{
-//			for(Entity other : this.lvl.getEntities().values())
-//			{
-//				
-//			}
+			for(Entity other : this.lvl.getEntities().values())
+			{
+				if (other == this) continue;
+				
+				if (this.y <= other.y + other.height && this.y >= other.y + (other.height / 2) && this.x + this.width > other.x && this.x < other.x + other.width)
+				{
+					other.onBottomHit(this);
+					
+					if (other.getProperty("solid") == Boolean.TRUE)
+					{
+						result = this.y - (other.y + other.height);
+					}
+				}
+			}
 			
-			this.setY(this.getY() - movement);
+			this.setY(this.getY() - result);
 		}
-		else if (direction == 3)
+		else if (direction == MovementDirection.DOWN)
 		{
-//			for(Entity other : this.lvl.getEntities().values())
-//			{
-//				
-//			}
+			for(Entity other : this.lvl.getEntities().values())
+			{
+				if (other == this) continue;
+				
+				if (this.y + this.height >= other.y && this.y + this.height <= other.y + (other.height / 2) && this.x + this.width > other.x && this.x < other.x + other.width)
+				{
+					other.onTopHit(this);
+					
+					if (other.getProperty("solid") == Boolean.TRUE)
+					{
+						result = other.y - (this.y + this.height);
+					}
+				}
+			}
 			
-			this.setY(this.getY() + movement);
+			this.setY(this.getY() + result);
 		}
+		
+		return result;
 	}
 	
 	public double getX()
