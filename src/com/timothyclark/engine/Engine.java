@@ -3,8 +3,10 @@ package com.timothyclark.engine;
 import com.timothyclark.engine.core.Game;
 import com.timothyclark.engine.core.LogicEngine;
 import com.timothyclark.engine.graphics.RenderingEngine;
+import com.timothyclark.engine.graphics.SpriteLoader;
 import com.timothyclark.engine.graphics.Window;
 import com.timothyclark.engine.input.KeyboardInput;
+import com.timothyclark.engine.level.LevelIO;
 
 public final class Engine
 {
@@ -50,6 +52,9 @@ public final class Engine
 		this.keyboard = new KeyboardInput();
 		
 		this.renderingEngine.getWindowInstance().registerKeyboardInput(this.keyboard);
+		
+		SpriteLoader.init();
+		LevelIO.init();
 		
 		setEngineRunning(true);
 

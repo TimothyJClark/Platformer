@@ -6,6 +6,7 @@ import com.timothyclark.engine.core.GameSettings;
 import com.timothyclark.engine.graphics.RenderingMode;
 import com.timothyclark.engine.graphics.SpriteLoader;
 import com.timothyclark.engine.level.Level;
+import com.timothyclark.engine.level.LevelIO;
 
 public class MyGame extends Game
 {
@@ -36,11 +37,16 @@ public class MyGame extends Game
 		cur.addEntity(7777777, new PlayerEntity(cur));
 		
 		cur.addEntity(4, new TileEntity(cur));
-
 	}
 
 	@Override
 	public void cleanupGame()
 	{
+		LevelIO.writeLevelToDisk(LevelIO.DEFAULT_PATH + "test.lvl", this.getCurrentLevel());
+	}
+	
+	public static void main(String[] args)
+	{
+		Engine.getEngineInstance().start(new MyGame());
 	}
 }

@@ -11,8 +11,24 @@ public final class SpriteLoader
 	public static final String DEFAULT_PATH = "res/sprites/";
 	private static final HashMap<String, Sprite> loadedSprites = new HashMap<String, Sprite>();
 	
+	private static boolean initialized = false;
+	
 	private SpriteLoader()
 	{
+	}
+	
+	public static void init()
+	{
+		if (initialized) return;
+		
+		File spriteFolder = new File(DEFAULT_PATH);
+		
+		if (!spriteFolder.exists())
+		{
+			spriteFolder.mkdirs();
+		}
+		
+		initialized = true;
 	}
 	
 	public static void loadSpritesFromPath(String path)

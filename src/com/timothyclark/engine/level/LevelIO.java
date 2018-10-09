@@ -9,14 +9,31 @@ import java.io.ObjectOutputStream;
 
 public final class LevelIO
 {
-	private static final String PATH = "res/levels/";
+	public static final String DEFAULT_PATH = "res/levels/";
+	
+	private static boolean initialized = false;
 	
 	private LevelIO()
 	{
 	}
 	
+	public static void init()
+	{
+		if (initialized) return;
+		
+		File levelsFolder = new File(DEFAULT_PATH);
+		
+		if (!levelsFolder.exists())
+		{
+			levelsFolder.mkdirs();
+		}
+		
+		initialized = true;
+	}
+	
 	private static Level loadLevelFromPath(String path)
 	{
+		
 		File lvlFile = new File(path);
 		
 		if (lvlFile.canRead())
@@ -50,12 +67,25 @@ public final class LevelIO
 	
 	public static Level loadLevel(String name)
 	{
-		return loadLevelFromPath(PATH + name);
+		return loadLevelFromPath(DEFAULT_PATH + name);
 	}
 	
 	public static void writeLevelToDisk(String path, Level lvl)
 	{
 		File lvlFile = new File(path);
+		
+		if (lvlFile.exists())
+		{
+			lvlFile.delete();
+		}
+		
+		try
+		{
+			lvlFile.createNewFile();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		
 		if (lvlFile.canWrite())
 		{
